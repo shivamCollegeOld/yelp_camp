@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Details</title>
+</head>
+<body>
+    <h1><%= foundCamp.title %> </h1>
+    <h2>Located in: <%= foundCamp.location %> </h2>
+    <h2>Costs $<%= foundCamp.price %> per night of stay</h2>
+    <a href="/campgrounds">Go back to all camps</a>
+    <form method="POST" action="/campgrounds?id=<%= foundCamp.id %>&_method=DELETE">
+        <button>Click to delete</button>
+    </form>
+    <form method="POST" action="/campgrounds?id=<%= foundCamp.id %>&_method=PATCH">
+        <input name="title" type="text" value="<%= foundCamp.title %>" />
+        <input name="description" type="text" value="<%= foundCamp.description %>" >
+        <input name="price" type="text" value="<%= foundCamp.price %>" />
+        <input name="location" type="text" value="<%= foundCamp.location %>" />
+        <button>Click to make changes</button>
+    </form>
+</body>
+</html>
