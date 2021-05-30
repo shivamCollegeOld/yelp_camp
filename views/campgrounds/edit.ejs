@@ -1,0 +1,13 @@
+<% layout('layouts/boilerplate') %>
+    <h1>Edit the details for <%= foundCamp.title %> </h1>
+    <form method="POST" action="/campgrounds/<%= foundCamp.id %>?_method=DELETE">
+        <button>Click to delete</button>
+    </form>
+    <form method="POST" action="/campgrounds/<%= foundCamp.id %>?_method=PUT">
+        <input name="title" type="text" value="<%= foundCamp.title %>" />
+        <input name="description" type="text" value="<%= foundCamp.description %>" >
+        <input name="price" type="text" value="<%= foundCamp.price %>" />
+        <input name="location" type="text" value="<%= foundCamp.location %>" />
+        <button>Click to make changes</button>
+    </form>
+    <a href="/campgrounds">Go back to all camps</a>
