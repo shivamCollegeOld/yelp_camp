@@ -28,75 +28,63 @@ app.use(express.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
 
 
-app.get('/campgrounds', async (req, res) => {
+app.get('/campgrounds', async (req, res, next) => {
     try {
         const allCamps = await Campground.find({});
         res.render('campgrounds/show', {allCamps});
     } catch (err) {
-        console.log("Error in fetching all camps data!");
-        res.render('campgrounds/error');
+        next(err);
     }
 });
 
-app.get('/campgrounds/add_camp', (req, res) => {
+app.get('/campgrounds/add_camp', (req, res, next) => {
     res.render('campgrounds/create');
 });
 
-app.get('/campgrounds/search', async (req, res) => {
+app.get('/campgrounds/search', async (req, res,next) => {
     const {campGroundName} = req.query;
     console.log(campGroundName);
     try {
-        //console.log("here1");
         const foundCampground = await Campground.findOne({title: campGroundName});
-        //console.log(foundCampground);
         res.redirect(`/campgrounds/${foundCampground._id}`);
     } catch(err) {
-        res.render('campgrounds/error');
+        next(err);
     }
 });
 
-app.get('/campgrounds/:id', async (req, res) => {
+app.get('/campgrounds/:id', async (req, res, next) => {
     const {id} = req.params;
-    //console.log("here2");
     try {
         const foundCamp = await Campground.findById(id);
         console.log(foundCamp.title);
         res.render('campgrounds/details', {foundCamp});
     } catch(err) {
-        console.log("Error in fetching campground by id");
-        res.render('campgrounds/error');
+        next(err);
     }
 });
 
-app.get('/campgrounds/:id/edit', async (req, res) => {
+app.get('/campgrounds/:id/edit', async (req, res, next) => {
     const {id} = req.params;
-    //console.log(id);
-    //console.log("here3");
     try {
-        //console.log("reached here1");
         const foundCamp = await Campground.findById(id);
-        //console.log("reached here2");
         res.render('campgrounds/edit', {foundCamp});
     } catch(err) {
-        console.log("Error in fetching campground by id");
-        //console.log(err);
-        res.render('campgrounds/error');
+        next(err);
     }
 });
 
-app.delete('/campgrounds/:id', async (req, res) => {
+app.delete('/campgrounds/:id', async (req, res, next) => {
     const {id} = req.params;
     try {
         await Campground.deleteOne({_id: id});
         res.redirect('/campgrounds');
         console.log("Successfully deleted");
     } catch(err) {
-        alert("No record found");
-        res.render('campgrounds/error');
+        next(err);
     }
 });
 
-app.put('/campgrounds/:id', async (req, res) => {
+app.put('/campgrounds/:id', async (req, res, next) => {
     const {id} = req.params;
     const {title, description, price, location} = req.body;
     try {
@@ -109,12 +97,11 @@ app.put('/campgrounds/:id', async (req, res) => {
         res.redirect(`/campgrounds/${id}`);
         console.log("Successfully deleted");
     } catch(err) {
-        alert("No record found");
-        res.render('campgrounds/error');
+        next(err);
     }
 });
 
-app.post('/campgrounds/add_camp', async (req, res) => {
+app.post('/campgrounds/add_camp', async (req, res, next) => {
     const {title, price, location} = req.body;
     const newCamp = new Campground({
         title: title,
@@ -126,9 +113,14 @@ app.post('/campgrounds/add_camp', async (req, res) => {
         await newCamp.save()
         res.redirect('/campgrounds');
     } catch (err) {
-        console.log("Error in saving new Campground data");
-        res.render('campgrounds/error');
+        next(err);
     }
+});
+
+
+app.use((err,req,res,next) => {
+    console.log(err);
+    res.render('campgrounds/error');
 });
 
 app.listen(8888, () => {
