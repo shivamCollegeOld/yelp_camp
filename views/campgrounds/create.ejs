@@ -1,7 +1,22 @@
 <% layout('layouts/boilerplate') %> 
+    <h1>Fill in the details for new campground</h1>
     <form method="POST" action="/campgrounds/add_camp">
-        <input name="title" type="text" placeholder="Enter title of camp">
-        <input name="price" type="text" placeholder="Enter price of stay">
-        <input name="location" type="text" placeholder="Enter location of camp">
-        <button>Click to add camp</button>
+        <div class="mb-3">
+            <label for="campgroundName">Name</label>
+            <input name="title" type="text" placeholder="Enter name of camp" class="form-control" id="campgroundName">
+        </div>
+        <div class="mb-3">
+            <label for="campgroundDescription">Description</label>
+            <input name="description" type="text" placeholder="Enter description of camp" class="form-control" id="campgroundDescription">
+        </div>
+        <div class="mb-3">
+            <label for="campgroundPrice">Price</label>
+            <input name="price" type="text" placeholder="Enter price of stay" class="form-control" id="campgroundPrice">
+        </div>
+        <div class="mb-3">
+            <label for="campgroundLocation">Location</label>
+            <input name="location" type="text" placeholder="Enter location of camp" class="form-control" id="campgroundLocation">
+        </div>
+        <br>
+        <button type="submit" class="btn btn-outline-primary">Add Camp</button>
     </form>

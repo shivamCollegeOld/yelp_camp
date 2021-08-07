@@ -1,6 +1,20 @@
 <% layout('layouts/boilerplate') %> 
-    <h1><%= foundCamp.title %> </h1>
+    <!-- <h1><%= foundCamp.title %> </h1>
     <h2>Located in: <%= foundCamp.location %> </h2>
-    <h2>Costs $<%= foundCamp.price %> per night of stay</h2>
-    <a href="/campgrounds">Go back to all camps</a>
-    <a href="/campgrounds/<%= foundCamp._id %>/edit">Click to edit</a>
+    <h2>Costs $<%= foundCamp.price %> per night of stay</h2> -->
+    
+    <div class="card mx-auto" style="width: 25rem;">
+        <img src="<%= foundCamp.image %>" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title"><%= foundCamp.title %>, <%= foundCamp.location %> </h5>
+            <h6 class="card-title">$<%= foundCamp.price %> per night </h3>
+            <p class="card-text"><%= foundCamp.description %></p>
+            <a style="text-decoration: none" href="/campgrounds/<%= foundCamp._id %>/edit">
+                <button class="btn btn-outline-dark">Click to edit</button>
+            </a>
+        </div>
+    </div>
+    <br>
+    <a style="text-decoration: none" href="/campgrounds">
+        <button class="btn btn-outline-secondary">All Camps</button>
+    </a>

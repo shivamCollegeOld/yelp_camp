@@ -41,6 +41,23 @@ app.get('/campgrounds/add_camp', (req, res, next) => {
     res.render('campgrounds/create');
 });
 
+app.post('/campgrounds/add_camp', async (req, res, next) => {
+    const {title, description, price, location} = req.body;
+    const newCamp = new Campground({
+        title: title,
+        description: description,
+        price: price,
+        location: location,
+    });
+
+    try {
+        await newCamp.save()
+        res.redirect('/campgrounds');
+    } catch (err) {
+        next(err);
+    }
+});
+
 app.get('/campgrounds/search', async (req, res,next) => {
     const {campGroundName} = req.query;
     console.log(campGroundName);
@@ -56,7 +73,7 @@ app.get('/campgrounds/:id', async (req, res, next) => {
     const {id} = req.params;
     try {
         const foundCamp = await Campground.findById(id);
-        console.log(foundCamp.title);
+        // console.log(foundCamp.title);
         res.render('campgrounds/details', {foundCamp});
     } catch(err) {
         next(err);
@@ -87,6 +104,8 @@ app.delete('/campgrounds/:id', async (req, res, next) => {
 app.put('/campgrounds/:id', async (req, res, next) => {
     const {id} = req.params;
     const {title, description, price, location} = req.body;
+    console.log(id);
+    console.log(`{${title}, ${description}, ${price}, ${location}}`)
     try {
         const foundCamp = await Campground.findById(id);
         foundCamp.title = title;
@@ -95,28 +114,11 @@ app.put('/campgrounds/:id', async (req, res, next) => {
         foundCamp.location = location;
         await foundCamp.save();
         res.redirect(`/campgrounds/${id}`);
-        console.log("Successfully deleted");
+        console.log(`Successfully edited ${foundCamp.title}`);
     } catch(err) {
         next(err);
     }
 });
-
-app.post('/campgrounds/add_camp', async (req, res, next) => {
-    const {title, price, location} = req.body;
-    const newCamp = new Campground({
-        title: title,
-        price: price,
-        location: location,
-    });
-
-    try {
-        await newCamp.save()
-        res.redirect('/campgrounds');
-    } catch (err) {
-        next(err);
-    }
-});
-
 
 app.use((err,req,res,next) => {
     console.log(err);
