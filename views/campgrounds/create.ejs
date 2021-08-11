@@ -1,22 +1,47 @@
 <% layout('layouts/boilerplate') %> 
     <h1>Fill in the details for new campground</h1>
-    <form method="POST" action="/campgrounds/add_camp">
+    <form method="POST" action="/campgrounds/add_camp" class="needs-validation" novalidate>
         <div class="mb-3">
             <label for="campgroundName">Name</label>
-            <input name="title" type="text" placeholder="Enter name of camp" class="form-control" id="campgroundName">
+            <input name="title" type="text" placeholder="Enter name of camp" class="form-control" id="campgroundName" required>
         </div>
         <div class="mb-3">
             <label for="campgroundDescription">Description</label>
-            <input name="description" type="text" placeholder="Enter description of camp" class="form-control" id="campgroundDescription">
+            <input name="description" type="text" placeholder="Enter description of camp" class="form-control" id="campgroundDescription" required>
         </div>
         <div class="mb-3">
             <label for="campgroundPrice">Price</label>
-            <input name="price" type="text" placeholder="Enter price of stay" class="form-control" id="campgroundPrice">
+            <input name="price" type="text" placeholder="Enter price of stay" class="form-control" id="campgroundPrice" required>
         </div>
         <div class="mb-3">
             <label for="campgroundLocation">Location</label>
-            <input name="location" type="text" placeholder="Enter location of camp" class="form-control" id="campgroundLocation">
+            <input name="location" type="text" placeholder="Enter location of camp" class="form-control" id="campgroundLocation" required>
         </div>
         <br>
         <button type="submit" class="btn btn-outline-primary">Add Camp</button>
     </form>
+
+
+    <script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function () {
+    'use strict'
+
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.querySelectorAll('.needs-validation')
+
+    // Loop over them and prevent submission
+    Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+            }
+
+            form.classList.add('was-validated')
+        }, false)
+        })
+    })()
+
+    </script>

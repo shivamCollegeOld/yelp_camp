@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
 const Campground = require('./models/campground');
-
+const Review = require('./models/review');
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
@@ -48,6 +48,7 @@ app.post('/campgrounds/add_camp', async (req, res, next) => {
         description: description,
         price: price,
         location: location,
+        image: "https://source.unsplash.com/800x600/?campground",
     });
 
     try {
@@ -69,17 +70,6 @@ app.get('/campgrounds/search', async (req, res,next) => {
     }
 });
 
-app.get('/campgrounds/:id', async (req, res, next) => {
-    const {id} = req.params;
-    try {
-        const foundCamp = await Campground.findById(id);
-        // console.log(foundCamp.title);
-        res.render('campgrounds/details', {foundCamp});
-    } catch(err) {
-        next(err);
-    }
-});
-
 app.get('/campgrounds/:id/edit', async (req, res, next) => {
     const {id} = req.params;
     try {
@@ -90,9 +80,25 @@ app.get('/campgrounds/:id/edit', async (req, res, next) => {
     }
 });
 
+app.get('/campgrounds/:id', async (req, res, next) => {
+    const {id} = req.params;
+    try {
+        const foundCamp = await Campground.findById(id).populate('reviews');
+        // console.log(foundCamp.title);
+        // console.log(foundCamp.reviews);
+        res.render('campgrounds/details', {foundCamp});
+    } catch(err) {
+        next(err);
+    }
+});
+
 app.delete('/campgrounds/:id', async (req, res, next) => {
     const {id} = req.params;
     try {
+        const foundCamp = await Campground.findById(id);
+        for(reviewId of foundCamp.reviews) {
+            await Review.findByIdAndDelete(reviewId);
+        }
         await Campground.deleteOne({_id: id});
         res.redirect('/campgrounds');
         console.log("Successfully deleted");
@@ -119,6 +125,37 @@ app.put('/campgrounds/:id', async (req, res, next) => {
         next(err);
     }
 });
+
+
+app.post('/campgrounds/:id/reviews', async (req, res, next) => {
+    const {rating, body} = req.body;
+    const {id: campId} = req.params;
+    const newReview = new Review({
+        body: body,
+        rating: rating,
+    });
+    try {
+        await newReview.save();
+        const correspondingCamp = await Campground.findById(campId);
+        correspondingCamp.reviews.push(newReview._id);
+        await correspondingCamp.save();
+        res.redirect(`/campgrounds/${campId}`)
+    } catch(err) {
+        next(err);
+    }
+});
+
+app.delete('/campgrounds/:campId/reviews/:reviewId', async(req, res, next) => {
+    const {campId, reviewId} = req.params;
+    try {
+        const foundCamp = await Campground.findByIdAndUpdate(campId, {$pull: {reviews: reviewId}});
+        await Review.findByIdAndDelete(reviewId);
+        res.redirect(`/campgrounds/${campId}`);
+    } catch(err) {
+        next(err);
+    }
+});
+
 
 app.use((err,req,res,next) => {
     console.log(err);
