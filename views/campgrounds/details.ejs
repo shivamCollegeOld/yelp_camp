@@ -9,11 +9,14 @@
                 <img src="<%= foundCamp.image %>" class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title"><%= foundCamp.title %>, <%= foundCamp.location %> </h5>
-                    <h6 class="card-title">$<%= foundCamp.price %> per night </h3>
+                    <h6 class="card-title">$<%= foundCamp.price %> per night </h6>
+                    <h6 class="card-title">~By <%= foundCamp.author.username %> </h6>
                     <p class="card-text"><%= foundCamp.description %></p>
-                    <a style="text-decoration: none" href="/campgrounds/<%= foundCamp._id %>/edit">
-                        <button class="btn btn-outline-dark">Click to edit</button>
-                    </a>
+                    <% if(currentUser && foundCamp.author.equals(currentUser._id)) {%> 
+                        <a style="text-decoration: none" href="/campgrounds/<%= foundCamp._id %>/edit">
+                            <button class="btn btn-outline-dark">Click to edit</button>
+                        </a>
+                    <% } %> 
                 </div>
             </div>
         </div>

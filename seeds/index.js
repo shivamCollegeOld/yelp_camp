@@ -33,6 +33,7 @@ async function seedDB() {
                 price: Math.floor(Math.random()*100)+1,
                 description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Mollitia, ipsum. Nostrum, suscipit vel quisquam sapiente, deleniti omnis eligendi nemo magnam facilis voluptates porro ducimus eum molestias, alias nesciunt incidunt consectetur.",
                 image: "https://source.unsplash.com/800x600/?campground",
+                author: '611537baf600c344381b70f8',
             });
             await newCamp.save();
         }

@@ -1,5 +1,6 @@
 const express = require('express');
 const Campground = require('../models/campground');
+const {isLoggedIn, isAuthor} = require('../middleware')
 
 const router = express.Router();
 
@@ -12,11 +13,11 @@ router.get('/', async (req, res, next) => {
     }
 });
 
-router.get('/add_camp', (req, res, next) => {
+router.get('/add_camp', isLoggedIn, (req, res, next) => {
     res.render('campgrounds/create');
 });
 
-router.post('/add_camp', async (req, res, next) => {
+router.post('/add_camp', isLoggedIn, async (req, res, next) => {
     const {title, description, price, location} = req.body;
     const newCamp = new Campground({
         title: title,
@@ -24,10 +25,12 @@ router.post('/add_camp', async (req, res, next) => {
         price: price,
         location: location,
         image: "https://source.unsplash.com/800x600/?campground",
+        author: req.user._id,
     });
 
     try {
-        await newCamp.save()
+        await newCamp.save();
+        req.flash('success', 'Campground added successfully!');
         res.redirect('/campgrounds');
     } catch (err) {
         next(err);
@@ -45,7 +48,7 @@ router.get('/search', async (req, res,next) => {
     }
 });
 
-router.get('/:id/edit', async (req, res, next) => {
+router.get('/:id/edit', isLoggedIn, isAuthor, async (req, res, next) => {
     const {id} = req.params;
     try {
         const foundCamp = await Campground.findById(id);
@@ -58,16 +61,14 @@ router.get('/:id/edit', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
     const {id} = req.params;
     try {
-        const foundCamp = await Campground.findById(id).populate('reviews');
-        // console.log(foundCamp.title);
-        // console.log(foundCamp.reviews);
+        const foundCamp = await Campground.findById(id).populate('author').populate('reviews');
         res.render('campgrounds/details', {foundCamp});
     } catch(err) {
         next(err);
     }
 });
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', isLoggedIn, isAuthor, async (req, res, next) => {
     const {id} = req.params;
     try {
         const foundCamp = await Campground.findById(id);
@@ -75,6 +76,7 @@ router.delete('/:id', async (req, res, next) => {
             await Review.findByIdAndDelete(reviewId);
         }
         await Campground.deleteOne({_id: id});
+        req.flash('success', 'Campground deleted successfully!');
         res.redirect('/campgrounds');
         console.log("Successfully deleted");
     } catch(err) {
@@ -82,7 +84,7 @@ router.delete('/:id', async (req, res, next) => {
     }
 });
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', isLoggedIn, isAuthor, async (req, res, next) => {
     const {id} = req.params;
     const {title, description, price, location} = req.body;
     console.log(id);
@@ -94,6 +96,7 @@ router.put('/:id', async (req, res, next) => {
         foundCamp.price = price;
         foundCamp.location = location;
         await foundCamp.save();
+        req.flash('success', 'Campground edited successfully!');
         res.redirect(`/campgrounds/${id}`);
         console.log(`Successfully edited ${foundCamp.title}`);
     } catch(err) {
