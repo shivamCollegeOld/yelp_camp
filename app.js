@@ -16,8 +16,8 @@ const localStrat = require('passport-local').Strategy;
 const Campground = require('./models/campground');
 const Review = require('./models/review');
 const User = require('./models/user');
-//const dbUrl = process.env.DB_URL;
-const dbUrl = process.env.DB_URL;
+const dbUrl = 'mongodb://127.0.0.1:27017/yelp-camp';
+// const dbUrl = process.env.DB_URL;
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -88,7 +88,7 @@ app.use((err,req,res,next) => {
     res.render('campgrounds/error');
 });
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8888;
 app.listen(PORT, () => {
     console.log(`Listening on PORT ${PORT}`);
 });
