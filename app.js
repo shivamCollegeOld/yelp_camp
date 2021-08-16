@@ -88,7 +88,7 @@ app.use((err,req,res,next) => {
     res.render('campgrounds/error');
 });
 
-const PORT = proces.env.PORT || 8888;
+const PORT = process.env.PORT || 8888;
 app.listen(PORT, () => {
     console.log(`Listening on PORT ${PORT}`);
 });
