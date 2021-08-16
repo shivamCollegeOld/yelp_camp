@@ -17,7 +17,7 @@ const Campground = require('./models/campground');
 const Review = require('./models/review');
 const User = require('./models/user');
 //const dbUrl = process.env.DB_URL;
-const dbUrl = 'mongodb://localhost:27017/yelp-camp'
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -39,14 +39,14 @@ app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
-app.use(cookieParser('thisshouldbeabettersecret'));
+app.use(cookieParser());
 const  sessionConfig = {
     name: 'session',
-    secret: 'thisshouldbeabettersecret',
+    secret: process.env.SECRET || 'thisshouldbeabettersecret',
     resave: false,
     saveUninitialized: true,
     store: mongoStore.create({
-        mongoUrl: 'mongodb://localhost:27017/yelp-camp',
+        mongoUrl: dbUrl,
         touchAfter: 24*60*60,
     }),
     cookie: {
@@ -76,6 +76,11 @@ const authRoutes = require('./routes/auth');
 app.use('/campgrounds',campgroundRoutes);
 app.use('/campgrounds/:campId/reviews',reviewRoutes);
 app.use('',authRoutes);
+
+
+app.get('/', (req, res, next) => {
+    res.render('home')
+})
 
 
 app.use((err,req,res,next) => {
