@@ -17,10 +17,10 @@ const campgroundSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    image: {
-        type: String,
-        required: false,
-    },
+    // image: {
+    //     type: String,
+    //     required: false,
+    // },
     reviews: [
         {
             type: mongoose.Schema.Types.ObjectId,
@@ -31,6 +31,12 @@ const campgroundSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
+    images: [
+        {
+            url: String,
+            filename: String,
+        }
+    ],
 });
 
 module.exports = mongoose.model('Campground', campgroundSchema);

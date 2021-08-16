@@ -1,9 +1,14 @@
+if(process.env.NODE !=="production") {
+    require('dotenv').config();
+}
+
 const mongoose = require('mongoose');
 const cities = require('./cities');
 const { places, descriptors } = require('./seedHelper');
 const Campground = require('../models/campground');
-
-mongoose.connect('mongodb://localhost:27017/yelp-camp', {
+const dbUrl = process.env.DB_URL;
+// local db: 'mongodb://localhost:27017/yelp-camp'
+mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true
@@ -32,8 +37,21 @@ async function seedDB() {
                 location: `${sampleLocation.city}, ${sampleLocation.state}`,
                 price: Math.floor(Math.random()*100)+1,
                 description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Mollitia, ipsum. Nostrum, suscipit vel quisquam sapiente, deleniti omnis eligendi nemo magnam facilis voluptates porro ducimus eum molestias, alias nesciunt incidunt consectetur.",
-                image: "https://source.unsplash.com/800x600/?campground",
-                author: '611537baf600c344381b70f8',
+                author: '611a133090eb1b9b49779867',
+                images: [
+                    {
+                      url: 'https://res.cloudinary.com/yelp-camp-zeproffesor/image/upload/v1629037523/Yelp-Camp/mfeygmfndkfgxjifc0rp.jpg',
+                      filename: 'Yelp-Camp/mfeygmfndkfgxjifc0rp',
+                    },
+                    {
+                      url: 'https://res.cloudinary.com/yelp-camp-zeproffesor/image/upload/v1629037524/Yelp-Camp/qvfu0amtkf9lip2tpqvd.jpg',
+                      filename: 'Yelp-Camp/qvfu0amtkf9lip2tpqvd',
+                    },
+                    {
+                      url: 'https://res.cloudinary.com/yelp-camp-zeproffesor/image/upload/v1629037527/Yelp-Camp/sx7nqnqtiqwhxj68risb.jpg',
+                      filename: 'Yelp-Camp/sx7nqnqtiqwhxj68risb',
+                    },
+                ],
             });
             await newCamp.save();
         }

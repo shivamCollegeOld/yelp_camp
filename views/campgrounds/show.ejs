@@ -15,7 +15,9 @@
             <div id=<%= `collapse${i}` %> class="accordion-collapse collapse" aria-labelledby=<%= `heading${i}` %> data-bs-parent="#accordionExample">
                 <div class="accordion-body">
                     <div class="card mx-auto" style="width: 25rem;">
-                        <img src="<%= camp.image %>" class="card-img-top" alt="...">
+                        <% if(camp.images.length) {%> 
+                            <img src="<%= camp.images[0].url %>" class="card-img-top" alt="...">
+                        <% } %> 
                         <div class="card-body">
                             <h5 class="card-title"><%= camp.title %>, <%= camp.location %> </h5>
                             <h6 class="card-title">$<%= camp.price %> per night </h3>
